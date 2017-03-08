@@ -20,5 +20,15 @@
     "security"
   ],
   "author": "Daniel Perrett",
-  "license": "MIT"
+  "license": "MIT",
+  "url": "https://github.com/pdl/saltpass-cli",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pdl/saltpass-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pdl/saltpass-cli/issues"
+  },
+  "homepage": "https://github.com/pdl/saltpass-cli#readme"
 }

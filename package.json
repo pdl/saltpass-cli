@@ -1,0 +1,24 @@
+{
+  "name": "saltpass-cli",
+  "version": "0.1.0",
+  "description": "Command-line utility for salting passwords",
+  "main": "index.js",
+  "bin": {
+    "saltpass": "./index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "node-getopt-long" : ">=0.3.2",
+    "prompt"           : ">=1.0.0",
+    "saltthepass"      : ">=0.2.2"
+  },
+  "keywords": [
+    "salt",
+    "password",
+    "security"
+  ],
+  "author": "Daniel Perrett",
+  "license": "MIT"
+}

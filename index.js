@@ -11,6 +11,7 @@ var options = getopt.options([
   [ 'algorithm|a=s',      { description: 'The hashing algorithm to use. One of ' + hashes.join(', '), test: hashes } ],
   [ 'domain-name|n=s',    { description: "The Domain Name should match the website you're generating a password for." } ],
   [ 'domain-phrase|p=s',  { description: "The Domain Phrase is an optional field that can be used to differentiate multiple passwords on the same website." } ],
+  [ 'keep|k!',            { description: "This flag determines whether to continue to prompt for more passwords once the first has been returned." } ],
   [ 'nul-separator|0!',   { description: 'This flag determines whether to output passwords null-separated. For use in scripting.' } ],
 ], {
   'name' : 'saltpass',
@@ -54,7 +55,7 @@ if (process.stdin.isTTY) {
   // We are running in interactive mode - give the user prompts.
   prompt.colors  = false;
   prompt.message = '';
-  
+
   var schema = {
     properties: {
       masterPass: {
@@ -91,43 +92,67 @@ if (process.stdin.isTTY) {
       }
     }
   };
-  
+
+  var repeatSchema = {
+    properties: {
+      domainName   : schema.properties.domainName,
+      domainPhrase : schema.properties.domainPhrase,
+      algorithm    : schema.properties.algorithm
+    }
+  };
+
   if (options['domain-name']) {
     delete schema.properties.domainName;
     delete schema.properties.domainPhrase;
+
+    if (options['keep']){
+      console.warn('Option --keep not compatible with --domain-name');
+      process.exit(1);
+    }
   } else if (options['domain-phrase']){
     console.warn('Option --domain-phrase not sensible without --domain-name');
     process.exit(1);
   }
+
   if (options['algorithm']) {
     delete schema.properties.algorithm;
+    delete repeatSchema.properties.algorithm;
   }
-  
-  prompt.start();
-  
-  prompt.get(schema, function (err, result) {
+
+  var cachedMasterPass;
+
+  var handleResult = function (err, result) {
     if (err) {
       console.warn(err);
     } else {
+      cachedMasterPass = result.masterPass || cachedMasterPass;
       console.log("Your password for '" + ( result.domainName || options['domain-name']) + "' is:");
       console.log(
         "  ",
         stp.saltthepass(
           result.algorithm || options['algorithm'],
-          result.masterPass,
+          cachedMasterPass,
           result.domainName || options['domain-name'] || '',
           result.domainPhrase || options['domain-phrase'] || ''
         )
       );
     }
-  });
+
+    if (options['keep']){
+      prompt.get(repeatSchema, handleResult);
+    }
+  }
+
+  prompt.start();
+
+  prompt.get(schema, handleResult);
 } else {
   var masterPass;
   var algorithm = options.algorithm || 'sha3';
   var rl        = readline.createInterface({
     input: process.stdin,
   });
-  
+
   rl.on('line', function(line){
     if (!masterPass) {
       masterPass = line;

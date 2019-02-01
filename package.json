@@ -10,9 +10,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "node-getopt-long" : ">=0.3.2",
-    "prompt"           : ">=1.0.0",
-    "saltthepass"      : ">=0.2.2"
+    "node-getopt-long": ">=0.3.2",
+    "prompt": ">=1.0.0",
+    "saltthepass": ">=0.2.2"
   },
   "keywords": [
     "salt",
@@ -22,7 +22,11 @@
   "author": "Daniel Perrett",
   "license": "MIT",
   "url": "https://github.com/pdl/saltpass-cli",
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^5.12.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pdl/saltpass-cli.git"

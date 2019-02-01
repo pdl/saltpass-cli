@@ -7,7 +7,7 @@ const readline = require('readline');
 
 const hashes = stp.getHashes();
 
-const helpPrefix =`
+const helpPrefix = `
 
 Generate unique, secure passwords for all of the websites you visit based on a single Master Password that you remember.
 
@@ -37,18 +37,18 @@ Advanced users: pipe in your master password followed by domain names and phrase
 
 const options = getopt.options([
   [ 'algorithm|a=s',      { description: `The hashing algorithm to use. One of ${hashes.join(', ')}.`, test: hashes } ],
-  [ 'domain-name|n=s',    { description: "The Domain Name should match the website you're generating a password for." } ],
-  [ 'domain-phrase|p=s',  { description: "The Domain Phrase is an optional field that can be used to differentiate multiple passwords on the same website." } ],
-  [ 'keep|k!',            { description: "This flag determines whether to continue to prompt for more passwords once the first has been returned." } ],
+  [ 'domain-name|n=s',    { description: 'The Domain Name should match the website you\'re generating a password for.' } ],
+  [ 'domain-phrase|p=s',  { description: 'The Domain Phrase is an optional field that can be used to differentiate multiple passwords on the same website.' } ],
+  [ 'keep|k!',            { description: 'This flag determines whether to continue to prompt for more passwords once the first has been returned.' } ],
   [ 'nul-separator|0!',   { description: 'This flag determines whether to output passwords null-separated. For use in scripting.' } ],
 ], {
   name           : 'saltpass',
   commandVersion : version,
   helpPrefix     : helpPrefix,
-  helpSuffix: [
-    "This programme uses Nic Jansma's SaltThePass approach ( https://saltthepass.com/ ) and library. It depends on you remembering a single Master Password that you keep safe and only use on SaltThePass. Ideally, you should never disclose it to anyone else, or even write it down. The Master Password, Domain Name and (optionally) the Domain Phrase are combined and hashed to generate a different Salted Password for each website you visit.",
-    "This programme, like SaltThePass is licensed under the MIT License."
-  ].join("\n")
+  helpSuffix     : [
+    'This programme uses Nic Jansma\'s SaltThePass approach ( https://saltthepass.com/ ) and library. It depends on you remembering a single Master Password that you keep safe and only use on SaltThePass. Ideally, you should never disclose it to anyone else, or even write it down. The Master Password, Domain Name and (optionally) the Domain Phrase are combined and hashed to generate a different Salted Password for each website you visit.',
+    'This programme, like SaltThePass is licensed under the MIT License.',
+  ].join('\n'),
 });
 
 if (process.stdin.isTTY) {
@@ -74,31 +74,31 @@ if (process.stdin.isTTY) {
       },
       domainPhrase: {
         hidden      : true,
-        description : 'Domain Phrase'
+        description : 'Domain Phrase',
       },
       algorithm: {
         hidden      : false,
-        message     : 'Algorithm must be one of ' + hashes.join(', '),
+        message     : `Algorithm must be one of ${hashes.join(', ')}`,
         description : 'Algorithm',
         default     : 'sha3',
         conform     : response => (hashes.indexOf(response.toLowerCase()) > -1),
-      }
-    }
+      },
+    },
   };
 
   const repeatSchema = {
     properties: {
       domainName   : schema.properties.domainName,
       domainPhrase : schema.properties.domainPhrase,
-      algorithm    : schema.properties.algorithm
-    }
+      algorithm    : schema.properties.algorithm,
+    },
   };
 
   if (options['domain-name']) {
     delete schema.properties.domainName;
     delete schema.properties.domainPhrase;
 
-    if (options['keep']) {
+    if (options.keep) {
       process.stderr.write('Option --keep not compatible with --domain-name\n');
       process.exit(1);
     }
@@ -107,7 +107,7 @@ if (process.stdin.isTTY) {
     process.exit(1);
   }
 
-  if (options['algorithm']) {
+  if (options.algorithm) {
     delete schema.properties.algorithm;
     delete repeatSchema.properties.algorithm;
   }
@@ -116,25 +116,25 @@ if (process.stdin.isTTY) {
 
   const handleResult = (err, result) => {
     if (err) {
-      process.stdout.write(err + '\n');
+      process.stdout.write(`${err}\n`);
     } else {
       cachedMasterPass = result.masterPass || cachedMasterPass;
 
       const domainName = result.domainName || options['domain-name'] || '';
       const saltedPass = stp.saltthepass(
-        result.algorithm || options['algorithm'],
+        result.algorithm || options.algorithm,
         cachedMasterPass,
         domainName,
-        result.domainPhrase || options['domain-phrase'] || ''
+        result.domainPhrase || options['domain-phrase'] || '',
       );
 
       process.stdout.write(`Your password for '${domainName}' is:\n  ${saltedPass}\n`);
     }
 
-    if (options['keep']) {
+    if (options.keep) {
       prompt.get(repeatSchema, handleResult);
     }
-  }
+  };
 
   prompt.start();
 
@@ -167,9 +167,9 @@ if (process.stdin.isTTY) {
       const output = [ saltedPass, domainName, domainPhrase ];
 
       if (options['nul-separator']) {
-        process.stdout.write(output.join('\0') + '\0');
+        process.stdout.write(`${output.join('\0')}\0`);
       } else {
-        process.stdout.write(output.join('\t') + '\n');
+        process.stdout.write(`${output.join('\t')}\n`);
       }
     }
   });

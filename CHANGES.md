@@ -1,3 +1,10 @@
+# 0.2.1
+
+Security release
+
+- Upgraded eslint dev dependency as previous version relied on versions of eslint-utils and lodash
+  which had reported vulnerabilities.
+
 # 0.2.0
 
 Feature release: `--keep`

@@ -30,6 +30,10 @@ Advanced users: pipe in your master password followed by domain names and phrase
 
       The hashing algorithm to use. Defaults to sha3.
 
+    -k --keep
+
+      This flag determines whether to continue to prompt for more passwords once the first has been returned.
+
     -n --domain-name[=]string
 
       The Domain Name should match the website you're generating a password for.

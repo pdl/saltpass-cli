@@ -1,18 +1,19 @@
 {
   "name": "saltpass-cli",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Command-line utility for salting passwords",
   "main": "index.js",
   "bin": {
     "saltpass": "./index.js"
   },
   "scripts": {
+    "lint": "git ls-files | grep '.js' | xargs yarn -s eslint --color",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "node-getopt-long": ">=0.3.2",
+    "node-getopt-long": ">=0.4.0",
     "prompt": ">=1.0.0",
-    "saltthepass": ">=0.2.2"
+    "saltthepass": "0.3.0"
   },
   "keywords": [
     "salt",

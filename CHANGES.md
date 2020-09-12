@@ -1,3 +1,13 @@
+# 0.3.0
+
+Fixes
+
+- Fixed an issue where global installs would fail depending on the version of saltthepass
+
+Security
+
+- Upgraded dependencies with reported vulnerabilities.
+
 # 0.2.1
 
 Security release

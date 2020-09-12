@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const version  = process.env.npm_package_version;
-const stp      = require('saltthepass');
+const stp      = require('saltthepass/src/saltthepass');
 const prompt   = require('prompt');
 const getopt   = require('node-getopt-long');
 const readline = require('readline');
